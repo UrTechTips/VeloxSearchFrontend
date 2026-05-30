@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    height: calc(100vh - var(--navbar-height));
+    width: 60%;
+    margin-inline: auto;
+}
+
+.topBar {
+    display: flex;
+    gap: 1rem;
+}

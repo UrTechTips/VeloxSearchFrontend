@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    height: var(--navbar-height);
+    align-items: center;
+    justify-content: space-between;
+
+    padding-inline: 2rem;
+    padding-block: 0.5rem;
+
+    .buttons {
+        display: flex;
+        gap: 1rem;
+
+        .link {
+            text-align: center;
+            padding-block: 0.5rem;
+            font-size: 1rem;
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            background-color: transparent;
+
+            &:hover {
+                font-weight: bold;
+            }
+        }
+    }
+    .brand {
+        cursor: pointer;
+    }
+}

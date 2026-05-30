@@ -1,13 +1,12 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --background: #070D21;
+  --foreground: #FFFFFF;
+  --light-accent: #D7F4FE;
+  --accent-color: #3EB489;
+  --accent-color-hover: #36A07B;
+  /* --primary-color: #9AE3FE; */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --navbar-height: 4rem;
 }
 
 html {

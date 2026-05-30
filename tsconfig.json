@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/config/firebaseConfig.sts"  ],
   "exclude": ["node_modules"]
 }
