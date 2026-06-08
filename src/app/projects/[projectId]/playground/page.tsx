@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import styles from "./page.module.scss";
 import CodeBlock from '@/components/CodeBlock/CodeBlock.component';
+import { toast } from 'react-toastify/unstyled';
 
 const Playground = () => {
   const [apiKey, setApiKey] = useState('');
@@ -24,12 +25,13 @@ const Playground = () => {
         });
         const data = await res.json();
         if (!res.ok || !data.success) {
-            console.log('API request failed:', data.error || 'Unknown error');
+            toast.error(data.error || "API request failed. Please try again later.");
         }
         console.log('API response:', data);
         setResponse(data);
     } catch (error)  {
         console.error('Error making API request:', error);
+        toast.error("Error making API request. Please try again later.");
     }
   }
 

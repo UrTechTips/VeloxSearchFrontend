@@ -3,13 +3,14 @@ import React from 'react'
 import styles from "./APIKeysDisplay.module.scss";
 import { useRouter } from 'next/navigation';
 import { auth } from "@/config/firebaseConfig";
+import { toast } from 'react-toastify/unstyled';
 
 const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: string }) => {
     const router = useRouter();
     const handleCreateAPIKey = async () => {
         const user = auth.currentUser;
         if (!user) {
-            alert("You must be logged in to create an API key.");
+            toast.error("You must be logged in to create an API key. Please log in and try again.");
             router.push("/auth/login");
             return;
         }
@@ -17,7 +18,7 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
         const token = await user.getIdToken();
         const name = prompt("Enter a name for the new API key:");
         if (!name) {
-            alert("API key name is required.");
+            toast.error("API key name is required. Please enter a name and try again.");
             return;
         }
 
@@ -32,12 +33,14 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
             const data = await res.json();
             if (!res.ok || !data.success) {
                 console.log("Error response from server:", data);
+                toast.error(data.message || "Failed to create API key. Please try again later.");
                 return;
             }
             console.log(data);
+            toast.success("API key created successfully.");
         } catch (error) {
             console.error("Error creating API key:", error);
-            alert("An error occurred while creating the API key.");
+            toast.error("An error occurred while creating the API key. Please try again later.");
         }
     }
     return (

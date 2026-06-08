@@ -3,6 +3,7 @@ import styles from "./page.module.scss";
 import { cookies } from 'next/headers';
 import { getUserFromToken } from '@/lib/auth-utils';
 import APIKeysDisplay from '@/components/APIKeysDisplay/APIKeysDisplay.component';
+import { toast } from 'react-toastify/unstyled';
 
 const ApiKeys = async ({ params }: { params: Promise<{ projectId: string }> }) => {
     const { projectId } = await params;
@@ -24,7 +25,7 @@ const ApiKeys = async ({ params }: { params: Promise<{ projectId: string }> }) =
         apiKeys = data.api_keys || [];
         console.log(data);
     } catch (err) {
-        console.error("Error fetching API keys", err);
+        toast.error("Error fetching API keys. Please try again later.");
     }
 
   return (

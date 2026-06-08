@@ -4,6 +4,7 @@ import styles from './page.module.scss';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FileUploadComponent from '@/components/FileUpload/FileUpload';
 import { auth } from '@/config/firebaseConfig';
+import { toast } from 'react-toastify/unstyled';
 
 interface UploadedFile {
   file: File;
@@ -23,11 +24,11 @@ const Upload = () => {
         const user = await auth.currentUser;
 
         if (!file) {
-            alert('Please upload a dataset before proceeding.');
+            toast.error('Please upload a dataset before proceeding.');
             return;
         }
         if (!datasetId) {
-            alert('Dataset ID is missing. Please go back and select a dataset.');
+            toast.error('Dataset ID is missing. Please go back and select a dataset.');
             router.back();
             return;
         }
@@ -35,7 +36,7 @@ const Upload = () => {
         try {
             const token = await user?.getIdToken();
             if (!token) {
-                alert('You must be logged in to upload a dataset.');
+                toast.error('You must be logged in to upload a dataset. Please log in and try again.');
                 window.location.href = '/auth/login';
             }
             const formData = new FormData();
@@ -51,11 +52,13 @@ const Upload = () => {
             })
             const data = await res.json();
             if (!res.ok || !data.success) {
+                toast.error(data.message || "Upload failed. Please try again later.");
                 console.error('Upload failed:', data);
                 return;
             }
             router.push(`/projects/config?datasetId=${datasetId}`);
         } catch (error) {
+            toast.error("Error occurred while uploading the dataset. Please try again later.");
             console.error('Error during authentication:', error);
         }
     }

@@ -4,6 +4,7 @@ import styles from './page.module.scss';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/config/firebaseConfig';
+import { toast } from 'react-toastify/unstyled';
 
 const New = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const New = () => {
       const token = await user?.getIdToken();
       
       if (!token) {
-        console.error("No active session token found.");
+        toast.error("You must be logged in to create a project. Please log in and try again.");
         return;
       }
 
@@ -39,12 +40,14 @@ const New = () => {
       const data = await res.json();
 
       if (!res.ok || !data.success) {
+        toast.error(data.message || "Failed to create project. Please try again later.");
         console.error("Failed to create project:", data);
         return;
       }
       const datasetId = data.dataset_id;
       router.push(`/projects/upload?datasetId=${datasetId}`);
     } catch (error) {
+      toast.error("Failed to create project. Please try again later."); 
       console.error("Failed to create project:", error);
     }
   }

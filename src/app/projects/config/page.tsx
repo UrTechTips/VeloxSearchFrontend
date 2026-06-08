@@ -4,6 +4,7 @@ import styles from './page.module.scss';
 import { useSearchParams } from 'next/navigation';
 import { auth } from '@/config/firebaseConfig'
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify/unstyled';
 
 interface SchemaType {
     $schema: string;
@@ -41,11 +42,13 @@ const Config = () => {
                 });
                 const data = await res.json();
                 if (!res.ok || !data.success) {
+                    toast.error(data.message || "Failed to fetch dataset schema. Please try again later.");
                     console.error('Failed to fetch dataset schema:', data.message);
                     return;
                 }
                 setSchema(JSON.parse(data.schema));
             } catch (error) {
+                toast.error("Error fetching dataset schema. Please try again later.");
                 console.error('Error fetching dataset schema:', error);
             }
         }
@@ -89,12 +92,14 @@ const Config = () => {
 
             const data = await res.json();
             if (!res.ok || !data.success) {
+                toast.error(data.message || "Failed to save configuration. Please try again later.");
                 console.error('Failed to save configuration:', data);
                 return;
             }
             router.push(`/projects/index?datasetId=${datasetId}`);
         } catch (error) {
-            console.error('Error during authentication:', error);
+            toast.error("Error saving configuration. Please try again later.");
+            console.error('Error saving configuration:', error);
         }
     }
 

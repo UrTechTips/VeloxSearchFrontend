@@ -3,6 +3,7 @@ import styles from "./page.module.scss";
 import {useState} from "react";
 import { useSearchParams, useRouter } from "next/navigation"
 import { auth } from "@/config/firebaseConfig";
+import { toast } from "react-toastify/unstyled";
 
 const Index = () => {
     const searchParams = useSearchParams();
@@ -15,13 +16,13 @@ const Index = () => {
     const handleStart = async () => {
         const datasetId = searchParams.get("datasetId");
         if (!datasetId) {
-            alert("Dataset ID is missing");
+            toast.error("Dataset ID is missing");
             router.back();
             return;
         }
         const user = auth.currentUser;
         if (!user) {
-            alert("You must be logged in to index a dataset");
+            toast.error("You must be logged in to index a dataset");
             window.location.href = "/auth/login";
             return;
         }
@@ -43,7 +44,7 @@ const Index = () => {
 
             ws.onerror = (error) => {
                 console.error("WebSocket error:", error);
-                alert("An error occurred while connecting to the indexing service.");
+                toast.error("An error occurred while connecting to the indexing service. Please try again later.");
             }
 
             ws.onclose = () => {
@@ -53,6 +54,7 @@ const Index = () => {
             
             setStarted(true);
         } catch (error) {
+            toast.error("An error occurred while starting the indexing process. Please try again later.");
             console.error("Error starting indexing:", error);
         }
     };
