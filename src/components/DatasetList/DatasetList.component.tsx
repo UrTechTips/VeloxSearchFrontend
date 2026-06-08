@@ -10,10 +10,11 @@ interface Props {
 }
 
 const INDEX_STATUS_COLORS: Record<string, string> = {
-    finished: '#16843e',
-    pending: '#f59e0b',
+    indexed: '#16843e',
+    queued: '#f59e0b',
     failed: '#ef4444',
-    not_indexed: '#94a3b8',
+    uploaded: '#2563eb',
+    created: '#94a3b8',
 };
 
 function formatDate(iso: string) {

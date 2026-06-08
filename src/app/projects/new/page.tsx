@@ -2,17 +2,20 @@
 
 import styles from './page.module.scss';
 import { useState } from 'react';
-import { getAuthToken } from '@/app/actions/auth'; // Import the server action
+import { useRouter } from 'next/navigation';
+import { auth } from '@/config/firebaseConfig';
 
 const New = () => {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
 
   const handleCreate = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    const user = await auth.currentUser;
 
     try {
-      const token = await getAuthToken();
+      const token = await user?.getIdToken();
       
       if (!token) {
         console.error("No active session token found.");
@@ -34,7 +37,13 @@ const New = () => {
       });
 
       const data = await res.json();
-      console.log(data);
+
+      if (!res.ok || !data.success) {
+        console.error("Failed to create project:", data);
+        return;
+      }
+      const datasetId = data.dataset_id;
+      router.push(`/projects/upload?datasetId=${datasetId}`);
     } catch (error) {
       console.error("Failed to create project:", error);
     }

@@ -1,0 +1,31 @@
+.container {
+    width: 15%;
+    height: calc(100vh - var(--navbar-height) - 1px);
+    margin: 0;
+    background: color-mix(in srgb, var(--accent-color) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
+
+    .element {
+        display: flex;
+        align-items: center;
+
+        height: 3rem;
+        width: calc(100% - 0.5rem);
+        margin-block: 0.25rem;
+        margin-left: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+
+        border-radius: 0.5rem 0 0 0.5rem;
+
+        &:hover {
+            background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+        }
+    }
+
+    .active {
+        // width: calc(100% - 0.5rem + 1px);
+        background: color-mix(in srgb, var(--accent-color) 18%, transparent) !important;
+    }
+}

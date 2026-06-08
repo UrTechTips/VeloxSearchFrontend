@@ -5,6 +5,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {auth} from '@/config/firebaseConfig'
 import {useRouter} from 'next/navigation'
 import { createAuthSession } from "@/app/actions/auth";
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const router = useRouter();
@@ -34,7 +35,7 @@ const Login = () => {
             const data = await response.json();
 
             if (!response.ok || !data.registered) {
-                alert("Your account is not registered. Please contact the administrator.");
+                toast.error("Your account is not registered. Please register before logging in.");
                 await auth.signOut();
                 router.push("/auth/register");
                 return;
@@ -42,7 +43,7 @@ const Login = () => {
             await createAuthSession(firebaseIdToken);
             router.push("/dashboard/projects");
         } catch (error) {
-            console.error(`Google sign-in error: ${error}`);
+            toast.error("Google Sign-In Error. Please try again later.");
         }
     }
 

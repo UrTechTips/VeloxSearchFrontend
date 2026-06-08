@@ -1,0 +1,96 @@
+.container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: inherit;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2a2a2a;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #3a3a3a;
+  }
+
+  .select {
+    background-color: #3c3c3c;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: #484848;
+    }
+
+    option {
+      background-color: #2a2a2a;
+    }
+  }
+
+  .copyButton {
+    background-color: #3c3c3c;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    user-select: none;
+
+    &:hover {
+      background-color: #484848;
+    }
+
+    &.copied {
+      background-color: #1e4d2b;
+      border-color: #2e7d45;
+      color: #6fcf97;
+    }
+  }
+
+  // github-dark.css sets its own background on .hljs — override it so our
+  // container background is the single source of truth.
+  .code {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 1rem 1.25rem;
+    background-color: #0d1117; // matches github-dark token background
+    color: #e6edf3;
+    overflow-x: auto;
+    font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    tab-size: 2;
+
+    code {
+      font-family: inherit;
+      font-size: inherit;
+      // Remove the padding/background that github-dark.css injects on .hljs
+      // so the <pre> controls all spacing.
+      padding: 0 !important;
+      background: transparent !important;
+    }
+  }
+}
+
+.response {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #e8e8e8;
+  overflow: auto;
+}

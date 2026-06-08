@@ -3,6 +3,11 @@ import { cookies } from "next/headers";
 
 export async function createAuthSession(idToken: string) {
     const cookieStore = await cookies();
+    const currentToken = cookieStore.get('__session')?.value;
+
+    if (currentToken === idToken) {
+        return;
+    }
 
     cookieStore.set('__session', idToken, {
         maxAge: 60 * 60 * 24 * 5,

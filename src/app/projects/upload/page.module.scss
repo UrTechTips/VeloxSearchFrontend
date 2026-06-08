@@ -1,0 +1,41 @@
+.container {
+    width: 60%;
+    margin-inline: auto;
+    min-height: calc(100vh - var(--navbar-height));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    // padding-top: 4rem;
+
+    h1 {
+        margin-block:0.5rem;
+    }
+
+    h4 {
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+.seperator {
+    width: 100%;;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-block: 2rem;
+}
+
+.nextButton {
+    margin-top: 2rem;
+    padding: 0.5rem 1.25rem;
+    background-color: var(--accent-color);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.dragAndDrop {
+    margin-top: 2rem;
+    width: 100%;
+}

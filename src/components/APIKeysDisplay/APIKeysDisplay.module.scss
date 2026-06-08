@@ -1,0 +1,67 @@
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 1rem auto;
+
+    .createButton {
+        width: fit-content;
+        height: fit-content;
+        padding: 0.5rem 1rem;
+        background-color: var(--accent-color);
+        color: black;
+        font-weight: 600;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--accent-color-hover);
+        }
+    }
+}
+
+.subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-block: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.apiKeysList {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    // gap: 1rem;
+    margin-top: 1rem;
+    margin-inline: auto;
+
+    .headerRow {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+    }
+    
+    .apiKeyItem {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.05);
+
+        .apiKeyInfo {
+            width: 50%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .apiKeyActions {
+            display: flex;
+            gap: 0.75rem;
+        }
+    }
+}

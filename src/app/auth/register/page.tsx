@@ -4,6 +4,7 @@ import styles from './page.module.scss';
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {auth} from '@/config/firebaseConfig'
 import { useRouter } from 'next/navigation'
+import { toast } from "react-toastify"
 
 const Register = () => {
     const router = useRouter();
@@ -36,7 +37,7 @@ const Register = () => {
             console.log(`Backend response: ${JSON.stringify(data)}`);
 
             if (!response.ok || !data.success) {
-                alert("Registration failed. Please try again.");
+                toast.error("Registration failed. Please try again.");
                 await auth.signOut();
                 return;
             }
@@ -44,6 +45,7 @@ const Register = () => {
             console.log("User registered successfully.");
             router.push("/dashboard/projects");
         } catch (error) {
+            toast.error("Google sign-in error. Please try again later.")
             console.error(`Google sign-in error: ${error}`);
         }
     }

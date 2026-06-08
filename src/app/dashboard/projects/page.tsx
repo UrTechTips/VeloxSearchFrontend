@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { getUserFromToken } from '@/lib/auth-utils';
 import DatasetList from '@/components/DatasetList/DatasetList.component';
 import { Dataset } from '@/types/dataset';
+import { toast } from "react-toastify";
 
 const Projects = async () => {
     const cookieStore = await cookies();
@@ -13,17 +14,18 @@ const Projects = async () => {
 
     let datasets: Dataset[] = [];
     try {
-        const res = await fetch(`${backendURL}/dataset/list/`, {
+        const res = await fetch(`${backendURL}/dataset/list`, {
             method: "GET",
             headers: { 'Authorization': `Bearer ${token}` },
             cache: 'no-store',
         });
         const data = await res.json();
+        console.log(data);
         if (data.success) {
             datasets = data.datasets;
         }
     } catch (err) {
-        console.error("Error fetching datasets", err);
+        toast.error("Error fetching datasets. Please try again later.");
     }
 
     return (
