@@ -74,8 +74,6 @@
     code {
       font-family: inherit;
       font-size: inherit;
-      // Remove the padding/background that github-dark.css injects on .hljs
-      // so the <pre> controls all spacing.
       padding: 0 !important;
       background: transparent !important;
     }
@@ -91,6 +89,6 @@
   font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
   font-size: 0.85rem;
   line-height: 1.5;
-  color: #e8e8e8;
-  overflow: auto;
+  color: #c1c1c1;
+  overflow-y: scroll !important;
 }

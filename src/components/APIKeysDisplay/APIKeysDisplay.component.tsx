@@ -1,11 +1,12 @@
 "use client";
-import React from 'react'
+import React, { useState } from 'react'
 import styles from "./APIKeysDisplay.module.scss";
 import { useRouter } from 'next/navigation';
 import { auth } from "@/config/firebaseConfig";
 import { toast } from 'react-toastify/unstyled';
 
 const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: string }) => {
+    const [viewingKey, setViewingKey] = useState<boolean[]>(new Array(apiKeys.length).fill(false));
     const router = useRouter();
     const handleCreateAPIKey = async () => {
         const user = auth.currentUser;
@@ -65,14 +66,22 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
                         <span>Actions</span>
                     </div>
                 </div>
-                {apiKeys.map((key) => (
+                {apiKeys.map((key, index) => (
                     <div className={styles.apiKeyItem} key={key.id}>
                         <div className={styles.apiKeyInfo}>
                             <span className={styles.apiKeyName}>{key.name}</span>
-                            <span className={styles.apiKeyValue}>{key.api_key}</span>
+                            <span className={styles.apiKeyValue}>
+                                {viewingKey[index] ? key.api_key : '••••••••••••••••'}
+                            </span>
                         </div>
                         <div className={styles.apiKeyActions}>
-                            <button className={styles.viewButton}>View</button>
+                            <button className={styles.viewButton} onClick={() => {
+                                const newViewingKey = [...viewingKey];
+                                newViewingKey[index] = !newViewingKey[index];
+                                setViewingKey(newViewingKey);
+                            }}>
+                                {viewingKey[index] ? 'Hide' : 'View'}
+                            </button>
                             <button className={styles.deleteButton}>Delete</button>
                         </div>
                     </div>

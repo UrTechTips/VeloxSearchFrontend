@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './page.module.scss'
 import { cookies } from 'next/headers';
+import Dashboard from '@/components/Dashboard/Dashboard.component';
 
 const ProjectDashboard = async ({ params }: { params: Promise<{ projectId: string }>}) => {
     const cookieStore = await cookies();
@@ -21,10 +22,11 @@ const ProjectDashboard = async ({ params }: { params: Promise<{ projectId: strin
 
     const data = await res.json();
     console.log(data);
-    const metadata = data.metadata?.metadata;
+    const metadata = data.metadata;
+
     return (
         <div className={styles.container}>
-            {metadata ? <h1>{metadata.name}</h1> : <h1>Project not found</h1>}
+            {metadata ? <Dashboard metadata={metadata} /> : <h1>Project not found</h1>}
         </div>
     )
 }
