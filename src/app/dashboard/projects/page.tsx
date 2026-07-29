@@ -25,7 +25,7 @@ const Projects = async () => {
             datasets = data.datasets;
         }
     } catch (err) {
-        toast.error("Error fetching datasets. Please try again later.");
+        console.log("Error fetching datasets. Please try again later.");
     }
 
     return (

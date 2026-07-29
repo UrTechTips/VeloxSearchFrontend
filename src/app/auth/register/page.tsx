@@ -11,7 +11,6 @@ const Register = () => {
     auth.languageCode = 'en';
     const provider = new GoogleAuthProvider();
     const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
 
         try {
             const result = await signInWithPopup(auth, provider);

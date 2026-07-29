@@ -21,6 +21,7 @@ const Login = () => {
             console.log(`User signed in: ${user.displayName} (${user.email}), UID: ${user.uid}`);
             const firebaseIdToken = await user.getIdToken();
             const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+            console.log(backendURL)
 
             const response = await fetch(`${backendURL}/users/registered`, {
                 method: 'POST',
@@ -43,7 +44,8 @@ const Login = () => {
             await createAuthSession(firebaseIdToken);
             router.push("/dashboard/projects");
         } catch (error) {
-            toast.error("Google Sign-In Error. Please try again later.");
+            console.log(error);
+            toast.error("Google Sign-In Error. Please try again later. error: " + error);
         }
     }
 
