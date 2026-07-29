@@ -92,7 +92,7 @@ For frontend behavior, the best references are the route files and shared compon
 
 ## Who maintains and contributes
 
-Velox Search is maintained by the UrTechTips team.
+Velox Search is maintained by the Sai Sreenadh Chilukuri.
 
 Contributions should follow the existing Next.js, TypeScript, and Sass patterns used in this codebase. There is no separate CONTRIBUTING.md in this checkout yet, so the fastest way to contribute is to open an issue or pull request and mirror the existing component and route structure.
 
