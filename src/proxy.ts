@@ -1,19 +1,12 @@
-// middleware.ts (Root of your project)
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { type NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/middleware";
 
-export function proxy(request: NextRequest) {
-  const token = request.cookies.get('__session')?.value;
-  const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard');
-  const isProjectsRoute = request.nextUrl.pathname.startsWith('/projects');
-
-  if ((isDashboardRoute || isProjectsRoute) && !token) {
-    return NextResponse.redirect(new URL('/auth/login', request.url));
-  }
-
-  return NextResponse.next();
+export async function proxy(request: NextRequest) {
+  return await createClient(request);
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/projects/:path*'],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
