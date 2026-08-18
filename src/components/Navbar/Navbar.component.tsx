@@ -4,9 +4,12 @@ import styles from './Navbar.module.scss'
 import Link from 'next/link'
 import { auth } from '@/config/firebaseConfig';
 import { clearAuthSession } from '@/app/actions/auth';
+import { createClient } from '@/lib/supabase/client';
 
-const Navbar = ({ loggedIn }: { loggedIn: boolean }) => {
-
+const Navbar = () => {
+  const supabase = createClient();  
+  const loggedIn = !!supabase.auth.getSession();
+  
   const handleLogout = async () => {
     try {
       await auth.signOut();

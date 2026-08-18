@@ -3,12 +3,21 @@ import { cookies } from 'next/headers';
 import { getUserFromToken } from '@/lib/auth-utils';
 import DatasetList from '@/components/DatasetList/DatasetList.component';
 import { Dataset } from '@/types/dataset';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
+import { createClient } from "@/lib/supabase/server";
 
 const Projects = async () => {
     const cookieStore = await cookies();
-    const token = cookieStore.get('__session')?.value;
-    const user = getUserFromToken(token!);
+
+    const supabase = createClient(cookieStore);
+    const { data: { session }, error} = await supabase.auth.getSession();
+
+    if (error) {
+        throw new Error(error.message);
+    }
+    const token = session?.access_token;
+    const user = session?.user;
+    console.log(user);
 
     const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -25,14 +34,14 @@ const Projects = async () => {
             datasets = data.datasets;
         }
     } catch (err) {
-        toast.error("Error fetching datasets. Please try again later.");
+        console.error("Error fetching datasets:", err);
     }
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div>
-                    <h1>Welcome back, <span>{user?.name}</span></h1>
+                    <h1>Welcome back, <span>{user?.user_metadata.name}</span></h1>
                     <p>{datasets.length} dataset{datasets.length !== 1 ? 's' : ''} available</p>
                 </div>
             </div>

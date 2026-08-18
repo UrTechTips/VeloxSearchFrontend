@@ -105,10 +105,10 @@ const loginContainer = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
+        <button className={styles.googleButton} onClick={() => handleOauth("Google")}>Continue with Google</button>
       </form>
 
-      <button onClick={() => handleOauth("Google")}>Continue with Google</button>
-      <p>
+      <p className={styles.registerLink}>
         Don't have an account? <Link href="/auth/register">Register</Link>
       </p>
     </div>

@@ -22,7 +22,15 @@ const RegisterContainer = () => {
 
         try {
             const supabase = createClient();
-            const {data, error} = await supabase.auth.signUp({ email, password });
+            const {data, error} = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        name: username
+                    }
+                }
+            });
 
             if (error) {
                 throw new Error(error?.message || "Authentication failed.");
@@ -109,9 +117,9 @@ const RegisterContainer = () => {
                 <button type="submit" disabled={loading}>
                     {loading ? "Registering..." : "Register"}
                 </button>
+                <button className={styles.googleButton} onClick={() => handleOauth("Google")}>Continue with Google</button>
             </form>
-            <button onClick={() => handleOauth("Google")}>Continue with Google</button>
-            <p>
+            <p className={styles.registerLink}>
                 Already have an account? <Link href="/auth/login">Login here</Link>
             </p>
         </div>
