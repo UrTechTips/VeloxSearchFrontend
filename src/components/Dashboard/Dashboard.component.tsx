@@ -1,5 +1,4 @@
 "use client"
-import React from 'react'
 import styles from './Dashboard.module.scss'
 
 const Dashboard = ({ metadata } : { metadata : any}) => {

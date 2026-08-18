@@ -1,10 +1,8 @@
-import styles from "./page.module.scss";
-import { cookies } from 'next/headers';
-import { getUserFromToken } from '@/lib/auth-utils';
 import DatasetList from '@/components/DatasetList/DatasetList.component';
-import { Dataset } from '@/types/dataset';
-import { toast } from 'react-toastify';
 import { createClient } from "@/lib/supabase/server";
+import { Dataset } from '@/types/dataset';
+import { cookies } from 'next/headers';
+import styles from "./page.module.scss";
 
 const Projects = async () => {
     const cookieStore = await cookies();

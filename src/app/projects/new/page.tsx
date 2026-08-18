@@ -1,10 +1,10 @@
 "use client";
 
-import styles from './page.module.scss';
-import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/config/firebaseConfig';
+import { useState } from 'react';
 import { toast } from 'react-toastify/unstyled';
+import styles from './page.module.scss';
 
 const New = () => {
   const router = useRouter();
@@ -13,11 +13,11 @@ const New = () => {
 
   const handleCreate = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const user = await auth.currentUser;
+    const supabase = createClient();
 
     try {
-      const token = await user?.getIdToken();
-      
+      const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
+
       if (!token) {
         toast.error("You must be logged in to create a project. Please log in and try again.");
         return;

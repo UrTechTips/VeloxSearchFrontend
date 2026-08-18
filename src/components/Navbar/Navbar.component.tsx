@@ -2,8 +2,6 @@
 
 import styles from './Navbar.module.scss'
 import Link from 'next/link'
-import { auth } from '@/config/firebaseConfig';
-import { clearAuthSession } from '@/app/actions/auth';
 import { createClient } from '@/lib/supabase/client';
 
 const Navbar = () => {
@@ -12,8 +10,7 @@ const Navbar = () => {
   
   const handleLogout = async () => {
     try {
-      await auth.signOut();
-      await clearAuthSession();
+      await supabase.auth.signOut();
       
       window.location.href = '/auth/login';
     } catch (error) {

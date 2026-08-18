@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from 'react'
 import styles from './page.module.scss';
 import { useSearchParams } from 'next/navigation';
-import { auth } from '@/config/firebaseConfig'
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify/unstyled';
+import { createClient } from '@/lib/supabase/client';
 
 interface SchemaType {
     $schema: string;
@@ -24,17 +24,18 @@ const Config = () => {
     useEffect(() => {
         const fetchDatasetSchema = async () => {
             const datasetId = searchParams.get('datasetId');
-            const user = auth.currentUser;
+            const supabase = createClient();
+            const user = await supabase.auth.getUser();
             if (!datasetId) {
                 alert('Dataset ID is missing. Please go back and select a dataset.');
                 return;
             }
             try {
-                if (!user) {
+                if (!supabase.auth.getSession()) {
                     console.error('User not authenticated. Redirecting to login.');
                     return;
                 }
-                const token = await user?.getIdToken();
+                const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
                 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
                 const res = await fetch(`${BACKEND_URL}/dataset/parse/${datasetId}`, {
                     method: 'GET',
@@ -53,7 +54,7 @@ const Config = () => {
             }
         }
         fetchDatasetSchema();
-    }, [searchParams, auth.currentUser])
+    }, [searchParams])
 
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -69,10 +70,10 @@ const Config = () => {
             alert('Dataset ID is missing. Please go back and select a dataset.');
             router.back();
         }
-        const user = auth.currentUser;
+        const supabase = createClient();
 
         try {
-            const token = await user?.getIdToken();
+            const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
             if (!token) {
                 alert('You must be logged in to save the configuration.');
                 window.location.href = '/auth/login';

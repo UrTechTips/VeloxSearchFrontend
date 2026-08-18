@@ -1,7 +1,6 @@
 "use client";
-import React from 'react'
+import { usePathname, useRouter } from 'next/navigation';
 import styles from "./Sidebar.module.scss";
-import { useRouter, usePathname } from 'next/navigation';
 
 const Sidebar = () => {
   const router = useRouter();

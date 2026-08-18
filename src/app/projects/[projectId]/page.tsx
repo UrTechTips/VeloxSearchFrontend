@@ -2,11 +2,14 @@ import React from 'react'
 import styles from './page.module.scss'
 import { cookies } from 'next/headers';
 import Dashboard from '@/components/Dashboard/Dashboard.component';
+import { createClient } from '@/lib/supabase/server';
 
 const ProjectDashboard = async ({ params }: { params: Promise<{ projectId: string }>}) => {
     const cookieStore = await cookies();
     const { projectId } = await params;
-    const token = cookieStore.get('__session')?.value;
+
+    const supabase = createClient(cookieStore);
+    const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
     console.log("TOKEN FOUND:", !!token); 

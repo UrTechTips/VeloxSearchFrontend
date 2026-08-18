@@ -12,16 +12,16 @@ const Page = ({ params }: { params: Promise<{ projectId: string }> }) => {
 	};
 
 	const handleUpgradeProject = (couponCode: string) => {
-    if (!couponCode) {
-      toast.error("Please enter a valid coupon code.");
-      return;
-    }
+		if (!couponCode) {
+			toast.error("Please enter a valid coupon code.");
+			return;
+		}
 
-    if (couponCode.toUpperCase() === "HANUMAN") {
-      toast.success("Project upgraded successfully to the Elite Plan!!!");
-    } else {
-      toast.error("Invalid coupon code. Please try again.");
-    }
+		if (couponCode.toUpperCase() === "HANUMAN") {
+			toast.success("Project upgraded successfully to the Elite Plan!!!");
+		} else {
+			toast.error("Invalid coupon code. Please try again.");
+		}
 	};
 
 	return (

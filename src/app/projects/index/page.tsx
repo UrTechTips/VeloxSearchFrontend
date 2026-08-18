@@ -1,9 +1,9 @@
 "use client";
-import styles from "./page.module.scss";
-import {useState} from "react";
-import { useSearchParams, useRouter } from "next/navigation"
-import { auth } from "@/config/firebaseConfig";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify/unstyled";
+import styles from "./page.module.scss";
 
 const Index = () => {
     const searchParams = useSearchParams();
@@ -20,16 +20,16 @@ const Index = () => {
             router.back();
             return;
         }
-        const user = auth.currentUser;
-        if (!user) {
+        const supabase = createClient();
+        if (!supabase.auth.getSession()) {
             toast.error("You must be logged in to index a dataset");
             window.location.href = "/auth/login";
             return;
         }
         try {
-            const token = await user.getIdToken();
+            const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
             const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-            const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/?token=${encodeURIComponent(token)}`);
+            const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/?token=${encodeURIComponent(token!)}`);
 
             ws.onopen = () => {
                 ws.send(JSON.stringify({id: datasetId}));

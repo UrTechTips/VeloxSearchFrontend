@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useRef } from "react";
+import { FileText, UploadCloud, X } from "lucide-react";
+import React, { useRef, useState } from "react";
 import styles from "./FileUpload.module.scss";
-import { UploadCloud, X, FileText } from "lucide-react";
 
 interface UploadedFile {
   file: File;

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar/Navbar.component";
-import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Dashboard | VeloxSearch",
@@ -9,11 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardLayout({children}: Readonly<{children: React.ReactNode;}>) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("__session")?.value;
     return (
         <>
-            <Navbar loggedIn={true} />
+            <Navbar/>
             {children}
         </>
     );

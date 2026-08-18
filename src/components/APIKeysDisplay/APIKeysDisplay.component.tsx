@@ -1,22 +1,22 @@
 "use client";
-import React, { useState } from 'react'
-import styles from "./APIKeysDisplay.module.scss";
+import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { auth } from "@/config/firebaseConfig";
+import { useState } from 'react';
 import { toast } from 'react-toastify/unstyled';
+import styles from "./APIKeysDisplay.module.scss";
 
 const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: string }) => {
     const [viewingKey, setViewingKey] = useState<boolean[]>(new Array(apiKeys.length).fill(false));
     const router = useRouter();
     const handleCreateAPIKey = async () => {
-        const user = auth.currentUser;
-        if (!user) {
+        const supabase = createClient();
+        if (!supabase.auth.getSession()) {
             toast.error("You must be logged in to create an API key. Please log in and try again.");
             router.push("/auth/login");
             return;
         }
         const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
-        const token = await user.getIdToken();
+        const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
         const name = prompt("Enter a name for the new API key:");
         if (!name) {
             toast.error("API key name is required. Please enter a name and try again.");

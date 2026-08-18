@@ -1,20 +1,20 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react";
-import styles from "./CodeBlock.module.scss";
 import hljs from "highlight.js/lib/core";
-import javascript from "highlight.js/lib/languages/javascript";
-import typescript from "highlight.js/lib/languages/typescript";
-import python from "highlight.js/lib/languages/python";
-import go from "highlight.js/lib/languages/go";
-import ruby from "highlight.js/lib/languages/ruby";
 import bash from "highlight.js/lib/languages/bash";
+import go from "highlight.js/lib/languages/go";
+import javascript from "highlight.js/lib/languages/javascript";
+import python from "highlight.js/lib/languages/python";
+import ruby from "highlight.js/lib/languages/ruby";
+import typescript from "highlight.js/lib/languages/typescript";
 import "highlight.js/styles/github-dark.css";
+import { useCallback, useMemo, useState } from "react";
+import styles from "./CodeBlock.module.scss";
 
 import {
   buildSnippet,
-  LANGUAGE_LABELS,
   HLJS_LANGUAGE_MAP,
+  LANGUAGE_LABELS,
   type Language,
 } from "./snippets";
 
