@@ -99,7 +99,7 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
                 {apiKeys.map((key, index) => (
                     <div className={styles.apiKeyItem} key={key.id}>
                         <div className={styles.apiKeyInfo}>
-                            <span className={styles.apiKeyName}>{key.name}</span>
+                            <span className={styles.apiKeyName}>{key.name} {key.is_active ? '' : <small>Deactivated</small>}</span>
                             <span className={styles.apiKeyValue}>
                                 {viewingKey[index] ? key.api_key : '••••••••••••••••'}
                             </span>

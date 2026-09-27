@@ -52,13 +52,13 @@ const Playground = () => {
             </div>
         </div>
         <div className={styles.code}>
-            <h1>Code snippet</h1>
-            <p className={styles.subtitle}>Copy and use this code in your project</p>
+          <h1>Code snippet</h1>
+          <p className={styles.subtitle}>Copy and use this code in your project</p>
 
-            <div className={styles.codeSnippet}>
-                <CodeBlock apiKey={apiKey} query={query} limit={limit} response={response} />
-            </div>
-        </div>
+          <div className={styles.codeSnippet}>
+              <CodeBlock apiKey={apiKey} query={query} limit={limit} response={response} />
+          </div>
+      </div>
       </div>
     </div>
   )

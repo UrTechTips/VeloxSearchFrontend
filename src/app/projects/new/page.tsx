@@ -73,7 +73,7 @@ const New = () => {
               value={desc}
               onChange={(e) => setDesc(e.target.value)}/>
             
-            <button type="submit" onClick={handleCreate}>Create Project</button>
+            <button className={styles.createButton} type="submit" onClick={handleCreate}>Create Project</button>
         </div>
     </div>
   );
