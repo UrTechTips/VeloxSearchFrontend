@@ -44,6 +44,36 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
             toast.error("An error occurred while creating the API key. Please try again later.");
         }
     }
+
+    const handleDeleteAPIKey = async (apiKeyId: string) => {
+        const supabase = createClient();
+        const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
+        const confirmDelete = confirm("Are you sure you want to delete this API key? This action cannot be undone.");
+        if (!confirmDelete) return;
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+            const res = await fetch(`${apiUrl}/apikey/deactivate`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ api_key_id: apiKeyId }),
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                toast.success("API key deleted successfully.");
+                router.refresh(); 
+            } else {
+                toast.error(`Failed to delete the API key: ${data.message}`);
+            }
+        } catch (error) {
+            console.error("Error deleting API key:", error);
+            toast.error("Failed to delete the API key. Please try again.");
+        }
+    }
     return (
         <>
             <div className={styles.header}>
@@ -82,7 +112,7 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
                             }}>
                                 {viewingKey[index] ? 'Hide' : 'View'}
                             </button>
-                            <button className={styles.deleteButton}>Delete</button>
+                            <button className={styles.deleteButton} onClick={() => handleDeleteAPIKey(key.id)}>Delete</button>
                         </div>
                     </div>
                 ))}

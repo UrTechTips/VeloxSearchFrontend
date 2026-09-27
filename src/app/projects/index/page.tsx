@@ -29,10 +29,10 @@ const Index = () => {
         try {
             const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
             const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-            const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/?token=${encodeURIComponent(token!)}`);
+            const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/`);
 
             ws.onopen = () => {
-                ws.send(JSON.stringify({id: datasetId}));
+                ws.send(JSON.stringify({ token, id: datasetId }));
             }
 
             ws.onmessage = (event: MessageEvent) => {
@@ -43,7 +43,8 @@ const Index = () => {
             }
 
             ws.onerror = (error) => {
-                console.error("WebSocket error:", error);
+                // Print why error happened Like error message or something
+                console.log("WebSocket error:", error);
                 toast.error("An error occurred while connecting to the indexing service. Please try again later.");
             }
 

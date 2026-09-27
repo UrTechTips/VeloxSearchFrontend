@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <>
-    <Navbar loggedIn={false} />
+    <Navbar />
     <div className={styles.container}>
       <div className={styles.hero}>
         <h1 className={styles.title}>Velox Search</h1>
