@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { FirebaseAuthProvider } from "./FirebaseAuthProvider";
 import ToastProvider from "@/components/Toast/ToastProvider.component";
 
 const geistSans = Geist({
@@ -28,9 +27,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <ToastProvider />
-        <FirebaseAuthProvider>
           {children}
-        </FirebaseAuthProvider>
         </body>
     </html>
   );

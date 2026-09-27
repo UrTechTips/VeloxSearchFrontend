@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar/Navbar.component";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Create Project - Velox Search",
@@ -13,7 +14,9 @@ export default async function DashboardLayout({children}: Readonly<{children: Re
     const token = cookieStore.get("__session")?.value;
     return (
         <>
-            <Navbar loggedIn={token ? true : false} />
+            <Suspense fallback={<div>Loading...</div>}>
+                <Navbar />
+            </Suspense>
             {children}
         </>
     );

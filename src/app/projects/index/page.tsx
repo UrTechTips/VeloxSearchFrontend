@@ -1,9 +1,9 @@
 "use client";
-import styles from "./page.module.scss";
-import {useState} from "react";
-import { useSearchParams, useRouter } from "next/navigation"
-import { auth } from "@/config/firebaseConfig";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify/unstyled";
+import styles from "./page.module.scss";
 
 const Index = () => {
     const searchParams = useSearchParams();
@@ -20,19 +20,25 @@ const Index = () => {
             router.back();
             return;
         }
-        const user = auth.currentUser;
-        if (!user) {
-            toast.error("You must be logged in to index a dataset");
-            window.location.href = "/auth/login";
-            return;
-        }
+        // if (!supabase.auth.getSession()) {
+        //     toast.error("You must be logged in to index a dataset");
+        //     window.location.href = "/auth/login";
+        //     return;
+        // }
         try {
-            const token = await user.getIdToken();
+            const supabase = createClient();
+            const {data: { session }, error} = await supabase.auth.getSession();
+            if (!session || error) {
+                toast.error("You must be logged in to index a dataset");
+                window.location.href = "/auth/login";
+                return;
+            }
+            const token = session.access_token;
             const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-            const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/?token=${encodeURIComponent(token)}`);
+            const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/`);
 
             ws.onopen = () => {
-                ws.send(JSON.stringify({id: datasetId}));
+                ws.send(JSON.stringify({ token, id: datasetId }));
             }
 
             ws.onmessage = (event: MessageEvent) => {
@@ -43,7 +49,8 @@ const Index = () => {
             }
 
             ws.onerror = (error) => {
-                console.error("WebSocket error:", error);
+                // Print why error happened Like error message or something
+                console.log("WebSocket error:", error);
                 toast.error("An error occurred while connecting to the indexing service. Please try again later.");
             }
 

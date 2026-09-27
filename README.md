@@ -1,107 +1,127 @@
-# Velox Search
+# Velox Search Frontend
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.2.6-black?logo=nextdotjs)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2.4-61dafb?logo=react&logoColor=000)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?logo=typescript&logoColor=fff)](https://www.typescriptlang.org/)
-[![Firebase](https://img.shields.io/badge/Firebase-Auth%20%2B%20Session%20Token-ffca28?logo=firebase&logoColor=000)](https://firebase.google.com/)
+Velox Search is a web interface for creating and searching document datasets. This repository contains the Next.js frontend: users can authenticate, create a project, upload a dataset, configure searchable and semantic fields, monitor indexing, manage API keys, and try search requests from an in-browser playground.
 
-Velox Search is the Next.js frontend for a document search platform. It gives users a web UI to register or log in with Google, create search projects, upload datasets, configure searchable fields, start indexing, manage API keys, and test queries in a playground.
+## Why Velox Search
 
-- Backend repository: https://github.com/UrTechTips/VeloxSearch
+- **Dataset workflow:** Create a project and upload a document dataset from the dashboard.
+- **Configurable indexing:** Select an ID field, searchable fields, and semantic-search fields before indexing.
+- **Live indexing feedback:** Follow indexing progress and service messages through the dashboard.
+- **API key management:** Generate and view keys for a dataset.
+- **Search playground:** Run a query with an API key and limit, inspect the response, and generate example requests for JavaScript, TypeScript, Python, cURL, Go, or Ruby.
+- **Supabase authentication:** Sign up, sign in with email and password, and use the configured OAuth provider.
 
-## What the project does
+## Architecture
 
-Velox Search helps teams move from raw documents to a searchable project in a few steps:
+The frontend is a Next.js App Router application. Supabase manages browser and server-side authentication sessions. Dataset management and search operations are handled by a separate Velox Search backend, configured through `NEXT_PUBLIC_BACKEND_URL`.
 
-- Authenticate with Google using Firebase.
-- Create and manage datasets from the dashboard.
-- Upload a dataset, inspect its schema, and choose searchable, semantic, and ID fields.
-- Trigger indexing and watch progress over a live WebSocket stream.
-- View project stats, API keys, and project settings.
-- Test search requests in the playground and copy example code snippets.
+The main application flow is:
 
-The main app flow lives in [src/app/page.tsx](src/app/page.tsx), [src/app/auth/login/page.tsx](src/app/auth/login/page.tsx), [src/app/dashboard/projects/page.tsx](src/app/dashboard/projects/page.tsx), and [src/app/projects](src/app/projects).
+1. Register or sign in at `/auth/register` or `/auth/login`.
+2. Create a project from `/dashboard/projects`.
+3. Upload a dataset and configure its fields.
+4. Start indexing and wait for the live progress stream to finish.
+5. Open the project to create API keys or use the playground.
 
-## Why the project is useful
-
-This frontend keeps the workflow focused and low-friction for developers and operators:
-
-- One Google sign-in flow for both registration and login.
-- Clear project lifecycle screens from dataset creation through indexing.
-- A dashboard that surfaces dataset status, length, and activity metrics.
-- API key management and a playground for validating search queries before integrating.
-- Server-backed sessions so authenticated users can move between routes without reauthenticating on every page.
-
-## Getting started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 20 or newer.
-- npm, yarn, or pnpm.
-- The Velox Search backend running locally or at a reachable URL.
+- Node.js with npm
+- Access to a Supabase project
+- A running Velox Search backend, including its HTTP API and indexing WebSocket endpoint
 
 ### Install
 
+Clone the repository, enter the frontend directory, and install dependencies:
+
 ```bash
+git clone <repository-url>
+cd frontend
 npm install
 ```
 
-### Configure the backend URL
+Create `.env.local` in the project root. The file is ignored by Git and must contain the public Supabase settings and backend URL used by the application:
 
-The frontend reads the backend base URL from `NEXT_PUBLIC_BACKEND_URL` and falls back to `http://localhost:8000` when it is not set.
-
-Create a `.env.local` file if you want to point the UI at a different backend:
-
-```bash
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
 ```
 
+`NEXT_PUBLIC_BACKEND_URL` defaults to `http://localhost:8000` when it is omitted. Use an `https://` backend in deployed environments; the frontend derives the indexing WebSocket URL from this value.
+
+Configure the authentication providers and redirect URLs in Supabase for the origin where the frontend runs. Email/password authentication is supported, and the login and registration pages also expose the configured OAuth provider.
+
 ### Run locally
+
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Open [http://localhost:3000](http://localhost:3000), register an account, and follow the project workflow described above.
 
-### Common user flow
+### Production build
 
-1. Open the homepage and choose Get Started.
-2. Register or log in with Google.
-3. Create a project from the dashboard.
-4. Upload a dataset and review its schema.
-5. Select the fields that should be searchable or used for semantic search.
-6. Start indexing and wait for the progress stream to finish.
-7. Use the API keys and playground screens to test search requests.
+Validate and run a production build with:
 
-### Helpful source files
+```bash
+npm run lint
+npm run build
+npm start
+```
 
-- Authentication and session handling: [src/app/actions/auth.ts](src/app/actions/auth.ts), [src/lib/auth-utils.ts](src/lib/auth-utils.ts)
-- Firebase client setup: [src/config/firebaseConfig.js](src/config/firebaseConfig.js)
-- Dataset and project flows: [src/app/projects](src/app/projects)
-- Dashboard and list views: [src/components/Dashboard/Dashboard.component.tsx](src/components/Dashboard/Dashboard.component.tsx), [src/components/DatasetList/DatasetList.component.tsx](src/components/DatasetList/DatasetList.component.tsx)
-- API keys and playground: [src/app/projects/[projectId]/api-keys/page.tsx](src/app/projects/[projectId]/api-keys/page.tsx), [src/app/projects/[projectId]/playground/page.tsx](src/app/projects/[projectId]/playground/page.tsx)
+The available npm scripts are defined in [package.json](package.json). The frontend uses Next.js, React, TypeScript, Sass, Supabase SSR helpers, `lucide-react`, `react-toastify`, and `highlight.js`.
 
-## Where to get help
+## Using the Search API
 
-If you need the backend API or want to understand the server contract, start with the backend repository:
+The playground generates request examples using the selected API key, query, and result limit. A request to the backend search endpoint has this shape:
 
-- Backend repository: https://github.com/UrTechTips/VeloxSearch
+```bash
+curl "http://localhost:8000/search/query?query=distributed%20systems&limit=10" \
+	-H "Authorization: Bearer <dataset-api-key>"
+```
 
-For frontend behavior, the best references are the route files and shared components in this repository, especially the pages under [src/app](src/app) and the UI components under [src/components](src/components).
+Keep API keys private. Replace the backend URL and query with values for your deployment and dataset. The backend remains the source of truth for the search response format and API behavior.
 
-## Who maintains and contributes
-
-Velox Search is maintained by the Sai Sreenadh Chilukuri.
-
-Contributions should follow the existing Next.js, TypeScript, and Sass patterns used in this codebase. There is no separate CONTRIBUTING.md in this checkout yet, so the fastest way to contribute is to open an issue or pull request and mirror the existing component and route structure.
-
-## Project structure
+## Project Structure
 
 ```text
-src/app           Next.js routes, layouts, and server actions
-src/components    Shared UI components for dashboards, forms, and widgets
-src/config        Firebase client configuration
-src/lib           Auth helpers and token utilities
-src/types         Shared TypeScript types
+src/app/auth/                 Authentication pages and OAuth callback
+src/app/dashboard/projects/   Dataset dashboard
+src/app/projects/             Project creation and setup flow
+src/app/projects/[projectId]/ Project dashboard, settings, keys, and playground
+src/components/               Reusable UI components
+src/lib/supabase/              Browser, server, and middleware Supabase clients
+src/types/                    Shared TypeScript types
+public/                       Static assets
 ```
+
+## Help and Documentation
+
+Start with the source code and route structure in this repository. In particular:
+
+- [package.json](package.json) lists scripts and dependencies.
+- [src/app](src/app) contains the user-facing routes and project workflow.
+- [src/components/CodeBlock/snippets.ts](src/components/CodeBlock/snippets.ts) shows the supported generated client examples.
+- [src/lib/supabase](src/lib/supabase) contains the authentication session integration.
+
+For backend endpoint behavior, indexing requirements, dataset formats, and response schemas, consult the Velox Search backend documentation or the backend maintainers. When reporting a problem, include the route, command, browser/server logs, and whether it occurs with the frontend alone or only when communicating with the backend.
+
+## Contributing
+
+Contributions are welcome. Before opening a change:
+
+1. Create a focused branch from the current default branch.
+2. Make the smallest change that addresses the issue or feature.
+3. Run `npm run lint` and `npm run build` locally.
+4. Update this README or relevant source documentation when setup or behavior changes.
+5. Open a pull request describing the user-visible change, validation performed, and any backend or Supabase configuration required.
+
+There is not currently a separate `CONTRIBUTING.md` or published maintainer directory in this frontend repository. Use the repository issue tracker and pull requests for support, review, and maintainer contact.
+
+## License
+
+No `LICENSE` file is currently included in this repository. Add or reference the project license before distributing the frontend as an open-source package.

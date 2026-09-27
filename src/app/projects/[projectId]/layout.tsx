@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar/Navbar.component";
-import { cookies } from "next/headers";
 import Sidebar from "@/components/SIdebar/Sidebar.component";
 
 export const metadata: Metadata = {
@@ -10,8 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectLayout({children}: Readonly<{children: React.ReactNode;}>) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("__session")?.value;
     return (
         <div style={{display: "flex", gap: "1rem"}}>  
             <Sidebar />

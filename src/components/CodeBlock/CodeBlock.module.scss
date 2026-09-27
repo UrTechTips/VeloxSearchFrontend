@@ -1,8 +1,11 @@
 .container {
   width: 100%;
+  max-width: 100%;
+  min-width: 0; // critical if this sits in a flex/grid parent
   border-radius: 8px;
   overflow: hidden;
   font-family: inherit;
+  box-sizing: border-box;
 
   .header {
     display: flex;
@@ -55,15 +58,14 @@
     }
   }
 
-  // github-dark.css sets its own background on .hljs — override it so our
-  // container background is the single source of truth.
   .code {
     display: block;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
     margin: 0;
     padding: 1rem 1.25rem;
-    background-color: #0d1117; // matches github-dark token background
+    background-color: #0d1117;
     color: #e6edf3;
     overflow-x: auto;
     font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
@@ -76,19 +78,43 @@
       font-size: inherit;
       padding: 0 !important;
       background: transparent !important;
+      white-space: pre; // let the pre's own overflow-x handle it
     }
   }
-}
 
-.response {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background-color: #1e1e1e;
-  border: 1px solid #3a3a3a;
-  border-radius: 4px;
-  font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: #c1c1c1;
-  overflow-y: scroll !important;
+  // moved inside .container so it inherits width/box-sizing constraints
+  .response {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    font-family: "Fira Code", "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #c1c1c1;
+
+    h3 {
+      margin: 0 0 0.5rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    pre {
+      margin: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 400px; // stop very long responses from blowing up page height
+      box-sizing: border-box;
+
+      code {
+        white-space: pre;
+      }
+    }
+  }
 }

@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from 'react'
-import styles from './page.module.scss';
-import { useRouter, useSearchParams } from 'next/navigation';
 import FileUploadComponent from '@/components/FileUpload/FileUpload';
-import { auth } from '@/config/firebaseConfig';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify/unstyled';
+import styles from './page.module.scss';
 
 interface UploadedFile {
   file: File;
@@ -21,7 +21,7 @@ const Upload = () => {
     const handleNext = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         const datasetId = searchParams.get('datasetId');
-        const user = await auth.currentUser;
+        const supabase = createClient();
 
         if (!file) {
             toast.error('Please upload a dataset before proceeding.');
@@ -34,7 +34,7 @@ const Upload = () => {
         }
         
         try {
-            const token = await user?.getIdToken();
+            const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
             if (!token) {
                 toast.error('You must be logged in to upload a dataset. Please log in and try again.');
                 window.location.href = '/auth/login';

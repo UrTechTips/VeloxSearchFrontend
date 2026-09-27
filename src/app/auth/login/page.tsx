@@ -1,65 +1,19 @@
-"use client";
 import Navbar from '@/components/Navbar/Navbar.component';
-import styles from './page.module.scss';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import {auth} from '@/config/firebaseConfig'
-import {useRouter} from 'next/navigation'
-import { createAuthSession } from "@/app/actions/auth";
-import { toast } from 'react-toastify';
+import LoginContainer from './loginContainer.component';
+import { Suspense } from 'react';
 
-const Login = () => {
-    const router = useRouter();
-    auth.languageCode = 'en';
-    const provider = new GoogleAuthProvider();
-    const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
+export const metadata = {
+    title: 'Login',
+    description: 'Login page for the application',
+}
 
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-
-            console.log(`User signed in: ${user.displayName} (${user.email}), UID: ${user.uid}`);
-            const firebaseIdToken = await user.getIdToken();
-            const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
-            console.log(backendURL)
-
-            const response = await fetch(`${backendURL}/users/registered`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${firebaseIdToken}`
-                },
-                body: JSON.stringify({
-                    uid: user.uid,
-                })
-            });
-            const data = await response.json();
-
-            if (!response.ok || !data.registered) {
-                toast.error("Your account is not registered. Please register before logging in.");
-                await auth.signOut();
-                router.push("/auth/register");
-                return;
-            }
-            await createAuthSession(firebaseIdToken);
-            router.push("/dashboard/projects");
-        } catch (error) {
-            console.log(error);
-            toast.error("Google Sign-In Error. Please try again later. error: " + error);
-        }
-    }
-
+const Login = async () => {    
     return (
         <>
-            <Navbar loggedIn={false} />
-            <div className={styles.container}>
-                <h1>Login</h1>
-                <p>Notice: Only Google authentication is available at the moment.</p>
-                {/* Just a google auth for now */}
-                <button className={styles.googleButton} onClick={handleGoogleSignIn}>
-                    Login with Google
-                </button>
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Navbar />
+                <LoginContainer />
+            </Suspense>
         </>
     )
 }

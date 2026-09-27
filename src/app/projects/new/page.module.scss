@@ -20,23 +20,24 @@
     input, textarea {
         padding: 0.5rem;
         font-size: 1rem;
-        border-radius: 0.25rem;
-        border: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.1);
     }
+}
 
-    button {
-        margin-top: 1rem;
-        width: fit-content;
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        border-radius: 0.25rem;
-        border: none;
-        background-color: var(--accent-color);
-        color: white;
-        cursor: pointer;
+.createButton {
+    background-color: var(--accent-color);
+    color: var(--foreground);
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
 
-        &:hover {
-            background-color: var(--accent-color-hover);
-        }
+    &:hover {
+        background-color: var(--accent-color-hover);
     }
 }
