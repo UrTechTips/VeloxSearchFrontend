@@ -26,7 +26,8 @@ export function buildSnippet(
   language: Language,
   apiKey: string,
   query: string,
-  limit: number
+  limit: number,
+  filters: Record<string, string | number | boolean>
 ): string {
   const base = `${BACKEND_URL}/search/query`;
   const url = `${base}?query=${encodeURIComponent(query)}&limit=${limit}`;
@@ -37,7 +38,8 @@ export function buildSnippet(
       return `const response = await fetch("${url}", {
   headers: {
     "Authorization": "${auth}"
-  }
+  },
+  body: JSON.stringify({ query: "${query}", filters: ${JSON.stringify(filters, null, 2)} }),
 });
 const data = await response.json();
 console.log(data);`;
@@ -51,7 +53,8 @@ console.log(data);`;
 const response = await fetch("${url}", {
   headers: {
     "Authorization": \`${auth}\`
-  }
+  },
+  body: JSON.stringify({ query: "${query}", filters: ${JSON.stringify(filters, null, 2)} }),
 });
 const data: SearchResult = await response.json();
 console.log(data);`;
@@ -59,16 +62,19 @@ console.log(data);`;
     case "python":
       return `import requests
 
-response = requests.get(
+response = requests.post(
     "${base}",
     params={"query": "${query}", "limit": ${limit}},
-    headers={"Authorization": "${auth}"}
+    headers={"Authorization": "${auth}"},
+    json={"query": "${query}", "filters": ${JSON.stringify(filters, null, 2)}}
 )
 print(response.json())`;
 
     case "curl":
       return `curl "${url}" \\
-  -H "Authorization: ${auth}"`;
+  -H "Authorization: ${auth}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "${query}", "filters": ${JSON.stringify(filters, null, 2)}}'`;
 
     case "go":
       return `package main
@@ -80,9 +86,11 @@ import (
 )
 
 func main() {
-\treq, _ := http.NewRequest(http.MethodGet, "${url}", nil)
+\treq, _ := http.NewRequest(http.MethodPost, "${url}", nil)
 \treq.Header.Set("Authorization", "${auth}")
-
+\treq.Header.Set("Content-Type", "application/json")
+\tjsonBody := []byte(\`{"query": "${query}", "filters": ${JSON.stringify(filters, null, 2)}}\`)
+\treq.Body = io.NopCloser(bytes.NewReader(jsonBody))
 \tclient := &http.Client{}
 \tresp, _ := client.Do(req)
 \tdefer resp.Body.Close()
@@ -101,6 +109,11 @@ http.use_ssl = uri.scheme == "https"
 
 request = Net::HTTP::Get.new(uri)
 request["Authorization"] = "${auth}"
+request["Content-Type"] = "application/json"
+request.body = JSON.dump({
+  "query" => "${query}",
+  "filters" => ${JSON.stringify(filters, null, 2)}
+})
 
 response = http.request(request)
 puts JSON.parse(response.body)`;

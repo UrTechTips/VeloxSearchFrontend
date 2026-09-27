@@ -30,15 +30,16 @@ interface CodeBlockProps {
   query: string;
   limit: number;
   response: null | Record<string, any>;
+  filters: Record<string, string | number | boolean>;
 }
 
-const CodeBlock = ({ apiKey, query, limit, response }: CodeBlockProps) => {
+const CodeBlock = ({ apiKey, query, limit, filters, response }: CodeBlockProps & { filters: Record<string, string | number | boolean> }) => {
   const [language, setLanguage] = useState<Language>("javascript");
   const [copied, setCopied] = useState(false);
 
   const snippet = useMemo(
-    () => buildSnippet(language, apiKey, query, limit),
-    [language, apiKey, query, limit]
+    () => buildSnippet(language, apiKey, query, limit, filters),
+    [language, apiKey, query, limit, filters]
   );
 
   // Highlight the raw snippet string directly — no DOM scanning, no stale state
