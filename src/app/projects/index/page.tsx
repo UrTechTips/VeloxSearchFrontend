@@ -20,14 +20,20 @@ const Index = () => {
             router.back();
             return;
         }
-        const supabase = createClient();
-        if (!supabase.auth.getSession()) {
-            toast.error("You must be logged in to index a dataset");
-            window.location.href = "/auth/login";
-            return;
-        }
+        // if (!supabase.auth.getSession()) {
+        //     toast.error("You must be logged in to index a dataset");
+        //     window.location.href = "/auth/login";
+        //     return;
+        // }
         try {
-            const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
+            const supabase = createClient();
+            const {data: { session }, error} = await supabase.auth.getSession();
+            if (!session || error) {
+                toast.error("You must be logged in to index a dataset");
+                window.location.href = "/auth/login";
+                return;
+            }
+            const token = session.access_token;
             const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
             const ws = new WebSocket(`${BACKEND_URL.replace(/^http/, "ws")}/index/`);
 

@@ -12,8 +12,8 @@ const Login = async () => {
         <>
             <Suspense fallback={<div>Loading...</div>}>
                 <Navbar />
+                <LoginContainer />
             </Suspense>
-            <LoginContainer />
         </>
     )
 }

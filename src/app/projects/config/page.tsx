@@ -24,18 +24,20 @@ const Config = () => {
     useEffect(() => {
         const fetchDatasetSchema = async () => {
             const datasetId = searchParams.get('datasetId');
-            const supabase = createClient();
-            const user = await supabase.auth.getUser();
+            
             if (!datasetId) {
                 alert('Dataset ID is missing. Please go back and select a dataset.');
                 return;
             }
             try {
-                if (!supabase.auth.getSession()) {
+                const supabase = createClient();
+                
+                const {data: { session }, error} = await supabase.auth.getSession();
+                if (!session || error) {
                     console.error('User not authenticated. Redirecting to login.');
                     return;
                 }
-                const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
+                const token = session.access_token;
                 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
                 const res = await fetch(`${BACKEND_URL}/dataset/parse/${datasetId}`, {
                     method: 'GET',
@@ -70,14 +72,16 @@ const Config = () => {
             alert('Dataset ID is missing. Please go back and select a dataset.');
             router.back();
         }
-        const supabase = createClient();
-
+        
         try {
-            const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
-            if (!token) {
+            const supabase = createClient();
+            const {data: { session }, error} = await supabase.auth.getSession();
+            if (!session || error) {
                 alert('You must be logged in to save the configuration.');
                 window.location.href = '/auth/login';
+                return;
             }
+            const token = session.access_token;
             const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
             const res = await fetch(`${BACKEND_URL}/dataset/config`, {
                 method: 'POST',

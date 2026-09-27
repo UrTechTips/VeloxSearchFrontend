@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_PATHS = ["", "/login", "/register", "/auth/callback"];
+const PUBLIC_PATHS = ["/", "/auth/login", "/auth/register", "/auth/callback"];
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -37,10 +37,14 @@ export const createClient = async (request: NextRequest) => {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isPublicPath = PUBLIC_PATHS.some((path) => request.nextUrl.pathname.startsWith(path));
+  const isPublicPath = PUBLIC_PATHS.some((path) => 
+    path === "/" 
+      ? request.nextUrl.pathname === "/" 
+      : request.nextUrl.pathname.startsWith(path)
+  );
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/auth/login";
 
     const fullDest = `${request.nextUrl.pathname}${request.nextUrl.search}`;
     if (fullDest !== "/") {

@@ -9,21 +9,22 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
     const [viewingKey, setViewingKey] = useState<boolean[]>(new Array(apiKeys.length).fill(false));
     const router = useRouter();
     const handleCreateAPIKey = async () => {
-        const supabase = createClient();
-        if (!supabase.auth.getSession()) {
-            toast.error("You must be logged in to create an API key. Please log in and try again.");
-            router.push("/auth/login");
-            return;
-        }
-        const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
-        const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
-        const name = prompt("Enter a name for the new API key:");
-        if (!name) {
-            toast.error("API key name is required. Please enter a name and try again.");
-            return;
-        }
-
         try {
+            const supabase = createClient();
+            const {data: { session }, error} = await supabase.auth.getSession();
+            if (!session || error) {
+                toast.error("You must be logged in to create an API key. Please log in and try again.");
+                router.push("/auth/login");
+                return;
+            }
+            const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+            const token = session.access_token;
+            const name = prompt("Enter a name for the new API key:");
+            if (!name) {
+                toast.error("API key name is required. Please enter a name and try again.");
+                return;
+            }
+
             const res = await fetch(`${BACKEND_URL}/apikey/generate?name=${encodeURIComponent(name)}&dataset_id=${encodeURIComponent(datasetId)}`, {
                 method: 'POST',
                 headers: {
@@ -46,12 +47,18 @@ const APIKeysDisplay = ({ apiKeys, datasetId }: { apiKeys: any[]; datasetId: str
     }
 
     const handleDeleteAPIKey = async (apiKeyId: string) => {
-        const supabase = createClient();
-        const token = await supabase.auth.getSession().then(res => res.data.session?.access_token);
-        const confirmDelete = confirm("Are you sure you want to delete this API key? This action cannot be undone.");
-        if (!confirmDelete) return;
-
         try {
+            const supabase = createClient();
+            const {data: { session }, error} = await supabase.auth.getSession();
+            if (!session || error) {
+                toast.error("You must be logged in to delete an API key. Please log in and try again.");
+                router.push("/auth/login");
+                return;
+            }
+            const token = session.access_token;
+            const confirmDelete = confirm("Are you sure you want to delete this API key? This action cannot be undone.");
+            if (!confirmDelete) return;
+
             const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
             const res = await fetch(`${apiUrl}/apikey/deactivate`, {
                 method: "POST",

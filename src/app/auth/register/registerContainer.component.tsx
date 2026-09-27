@@ -20,6 +20,12 @@ const RegisterContainer = () => {
         e.preventDefault();
         setLoading(true);
 
+        if (password !== confirmPassword) {
+            toast.error("Passwords do not match.");
+            setLoading(false);
+            return;
+        }
+
         try {
             const supabase = createClient();
             const {data, error} = await supabase.auth.signUp({
@@ -38,6 +44,11 @@ const RegisterContainer = () => {
 
             if (data.session) {
                 const redirect = searchParams.get("redirectTo") || "/dashboard/projects";
+                // Validate redirect URL to prevent open redirect vulnerabilities
+                if (redirect && (!redirect.startsWith("/") || redirect.includes("://") || redirect.startsWith("//") || redirect.startsWith("/\\"))) {
+                    toast.error("Invalid redirect URL.");
+                    return;
+                }
                 router.push(redirect);
                 router.refresh();
             } else {
@@ -117,7 +128,7 @@ const RegisterContainer = () => {
                 <button type="submit" disabled={loading}>
                     {loading ? "Registering..." : "Register"}
                 </button>
-                <button className={styles.googleButton} onClick={() => handleOauth("Google")}>Continue with Google</button>
+                <button type="button" className={styles.googleButton} onClick={() => handleOauth("Google")}>Continue with Google</button>
             </form>
             <p className={styles.registerLink}>
                 Already have an account? <Link href="/auth/login">Login here</Link>

@@ -12,8 +12,8 @@ const Register = () => {
         <>
             <Suspense fallback={<div>Loading...</div>}>
                 <Navbar />
+                <RegisterContainer />
             </Suspense>
-            <RegisterContainer />
         </>
     )
 }

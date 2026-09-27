@@ -50,6 +50,11 @@ const loginContainer = () => {
       }
 
       const redirect = searchParams.get("redirectTo") || "/dashboard/projects";
+      // Validate redirect URL to prevent open redirect vulnerabilities
+      if (redirect && (!redirect.startsWith("/") || redirect.includes("://") || redirect.startsWith("//") || redirect.startsWith("/\\"))) {
+        toast.error("Invalid redirect URL.");
+        return;
+      }
       router.push(redirect);
       router.refresh();
 
@@ -105,7 +110,7 @@ const loginContainer = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
-        <button className={styles.googleButton} onClick={() => handleOauth("Google")}>Continue with Google</button>
+        <button type='button' className={styles.googleButton} onClick={() => handleOauth("Google")}>Continue with Google</button>
       </form>
 
       <p className={styles.registerLink}>
